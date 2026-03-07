@@ -1,0 +1,50 @@
+body {
+    font-family:'Times New Roman', Times, serif;
+    margin: 20px;
+}
+
+h1 {
+    background-color:cornflowerblue;
+    color: White;
+    text-align: center;
+    padding: 10px;
+}
+
+h2 {
+    background-color:cornflowerblue;
+    color: White;
+    text-align: center;
+    padding: 8px;
+}
+
+h3 {
+    background-color:lightblue;
+    color: black;
+    padding: 6px;
+}
+
+.bordeFino {
+    border: 2px solid black;
+    padding: 10px;
+}
+
+.bordeGrueso {
+    border: 5px solid lightblue;
+    padding: 15px;
+}
+
+.destacado {
+    font-weight: bold;
+    font-size: 105%;
+}
+
+.subrayado {
+    text-decoration: underline;
+}
+
+.definicion {
+    background-color: antiquewhite;
+    border: 2px dashed rgb(193, 132, 18);
+    padding: 10px;
+    margin: 10px;
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> Ejercicio 3 </title>
+<link rel="stylesheet" href="miestilo.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      R: "{\\mathbb R}",
+      N: "{\\mathbb N}",
+      Z: "{\\mathbb Z}",
+      bold: ["{\\bf #1}",1]
+    }
+  }
+});
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+TeX: {
+  extensions: ["AMSmath.js", "AMSsymbols.js", "color.js"]
+}
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML' async></script>
+
+<body>
+
+    <h1> Tema 8: Funciones </h1>
+    <h2> Operaciones con Funciones </h2>
+
+    <h3> 1. Operaciones aritméticas </h3>
+
+    <div class="bordeFino">
+        <p> Con las funciones se pueden realizar las mismas operaciones que con cualesquiera otras expresiones algebraicas. Es decir, podemos realizar operaciones aritméticas tales como <span class="destacado">sumar, restar, multiplicar o dividir</span> sin ninguna dificultad más allá de las propias de las fracciones algebraicas. </p>
+    </div>
+
+    <h3> 2. Cálculo de la Inversa de una función </h3>
+
+    <div class="bordeGrueso">
+        <p> Lo primero que hay que decir al respecto de esta idea es que no todas las funciones tienen una inversa. En el caso de que la tengan, su cálculo no representa una gran dificultad. </p>
+        
+        <div class="definicion">
+            Dada una función $f(x)$ tal que $f(x) = y$, se llama <span class="destacado">inversa</span> de $f$, y se denota por $f^{-1}$, a una función tal que $f^{-1}(y) = x$.
+        </div>
+    
+        <p> Para <span class="subrayado">hallar la inversa de una función</span>, no tenemos más que seguir los siguientes pasos: </p>
+        <ol type="a">
+            <li> Cambiamos la $y$ por la $x$, es decir, donde hay una $y$ ponemos una $x$, y viceversa. </li>
+            <li> Despejamos la $y$. </li>
+        </ol>
+    </div>
+
+    <h3> 3. Composición de funciones </h3>
+
+    <div class="bordeGrueso">
+        <p> La composición de dos funciones no es más que la obtención de una función que haga lo mismo que hacen las otras dos en el orden adecuado. </p>
+        
+        <div class="definicion">
+            Dadas dos funciones $f(x)$ y $g(x)$, se escribe $(f \circ g)(x)$ y se lee “g compuesto con f” a la función $f(g(x))$.
+        </div>
+        
+        <p> Para obtener la composición de dos funciones lo único que tenemos que tener en cuenta es el <span class="subrayado">orden</span> en que ha de realizarse dicha composición. Una vez determinado el orden, la composición no es más que la sustitución de la variable por la función que se quiere componer. </p>
+    </div>
+
+</body>
+
+</html>
