@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> Ejercicio 5 </title>
+<link rel="stylesheet" href="miestilo.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      R: "{\\mathbb R}",
+      N: "{\\mathbb N}",
+      Z: "{\\mathbb Z}",
+      bold: ["{\\bf #1}",1]
+    }
+  }
+});
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+TeX: {
+  extensions: ["AMSmath.js", "AMSsymbols.js", "color.js"]
+}
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML' async></script>
+
+
+<body>
+
+  <h1> Ejercicio 5 </h1>
+
+
+  <h3> Parte 1 </h3>
+
+  <div id="Parte1" class="bordeFino">
+    <p> Realiza sucesivos clics en el lienzo inferior para dibujar una línea poligonal: </p>
+    <canvas id="lienzo" width="500" height="500" style="margin-bottom:10px; background-color: antiquewhite" onclick="cogerClicks(event)"></canvas>
+  </div>
+
+
+  <h3> Parte 2 </h3>
+
+  <div id="Parte2" class="bordeFino">
+    <div id="TextoParaModificar">
+      <p> Escribe abajo un texto. Puede contener fórmulas en código LateX (entre dólares). Al pulsar el botón, este texto cambiará al que has introducido. </p>
+    </div>
+    <input type="text" id="entradaTexto" style="margin-bottom:10px">
+    <button onclick="modificarTextoYpasarLatex()"> Púlsame para modificar el texto de arriba por el introducido. </button>
+  </div>
+
+</body>
+
+
+<script>
+
+  // Parte 1:
+
+  let lienzo = document.getElementById("lienzo");
+  let lienzoImportante = lienzo.getContext("2d");
+  let puntos = []; // Lista para almacenar las coordenadas de cada clic
+
+  function dibujarLinea(puntos) {
+    if (puntos.length > 1) {
+      let i;
+      let puntoInicial = puntos[puntos.length-2];
+      let puntoFinal = puntos[puntos.length-1];
+      lienzoImportante.moveTo(puntoInicial.coordX, puntoInicial.coordY);
+      lienzoImportante.lineTo(puntoFinal.coordX, puntoFinal.coordY);
+      lienzoImportante.stroke();
+    }
+  }
+
+  function cogerClicks(event) {
+    let coordenadasLienzo = lienzo.getBoundingClientRect();
+    let x = event.clientX - coordenadasLienzo.x;
+    let y = event.clientY - coordenadasLienzo.y;
+    puntos.push({coordX:x,coordY:y});
+
+    dibujarLinea(puntos);
+  }
+
+  // Parte 2:
+
+  function modificarTextoYpasarLatex() {
+    let aux1 = document.getElementById("TextoParaModificar");
+    let aux2 = document.getElementById("entradaTexto");
+    aux1.innerText = "He cambiado a: " + aux2.value;
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"MathOutput"]);
+  }
+
+</script>
+
+</html>
