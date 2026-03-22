@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> Ejercicio 6 Parte 3 </title>
+<link rel="stylesheet" href="miestilo.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      R: "{\\mathbb R}",
+      N: "{\\mathbb N}",
+      Z: "{\\mathbb Z}",
+      bold: ["{\\bf #1}",1]
+    }
+  }
+});
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+TeX: {
+  extensions: ["AMSmath.js", "AMSsymbols.js", "color.js"]
+}
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML' async></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+
+
+<style>
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+  }
+
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 1em;
+  }
+
+  canvas {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 100%;
+    height: auto;
+    max-height: 350px;
+    margin-bottom: 15px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+  }
+  
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  th { background-color:rgb(242, 123, 182); color: white; }
+  tbody tr:nth-child(even) { background-color: #eff1f2; }
+        
+  /* Ocultar elementos inicialmente */
+  #zonaResultados { display: none; }
+
+  .contenedor {
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+    max-width: 850px;
+    width: 100%;
+  }
+        
+  .mismaFila {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+
+  .mismoGrupo1 {
+    flex: 100%;
+  }
+  
+  .mismoGrupo2 {
+    flex: 1;
+    min-width: 150px;
+  }
+        
+  .botones {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+        
+  .infoIteracion {
+    font-size: 1em;
+    line-height: 1.3;
+    padding: 15px;
+    background: #e9ecef;
+    border-radius: 8px;
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  
+  .infoIteracion hr { border-top: 1px solid #ccc; margin: 10px 0; border-bottom: none; }
+  .math { font-family: monospace; font-weight: bold; color:#f451a2; }
+  .success { color: #198754; font-weight: bold; }
+  .error { color: #dc3545; font-weight: bold; }
+
+</style>
+
+
+<body>
+
+  <h1> Matemáticas dinámicas (Parte II) </h1>
+  <h1> Ejercicio 6 </h1>
+
+  <h3> Parte 3 </h3>
+
+  <div id="Ej6Parte3" class="bordeFino" style="padding:15px; display:flex; flex-direction:column; align-items:center;">
+    <div class="contenedor">
+      <h2 style="background-color:rgb(242, 123, 182); border-radius: 8px;"> Método de la bisección (Bolzano) </h2>
+      <div class="mismaFila">
+        <div class="mismoGrupo1">
+          <label for="funcion">Función f(x):</label>
+          <input type="text" id="funcion" value="x^2 - 4">
+          <small>Usa sintaxis matemática (p. ej.: <i>sin(x)</i>, <i>exp(x)</i>, <i>x^2</i>).</small>
+        </div>
+      </div>
+      <div class="mismaFila">
+        <div class="mismoGrupo2">
+          <label for="a">Extremo inferior (a):</label>
+          <input type="number" id="a" step="any" value="0">
+        </div>
+        <div class="mismoGrupo2">
+          <label for="b">Extremo superior (b):</label>
+          <input type="number" id="b" step="any" value="5">
+        </div>
+        <div class="mismoGrupo2">
+          <label for="tolerancia">Tolerancia (Error):</label>
+          <input type="number" id="tolerancia" step="any" value="0.001">
+        </div>
+      </div>
+
+      <div class="botones">
+        <button class="primary" onclick="iniciar()"> 1. Iniciar </button>
+        <button class="step" id="btnIteracion" onclick="siguienteIteracion()" disabled> 2. Siguiente iteración </button>
+        <button class="all" id="btnRaiz" onclick="calcularRaiz()" disabled> 3. Calcular raíz </button>
+      </div>
+
+      <div id="panelErrores"></div>
+
+      <div id="zonaResultados">
+        <canvas id="lienzo" width="800" height="350"></canvas>
+        
+        <div class="infoIteracion" id="panelInfoIteracion"></div>
+
+        <table id="tablaResultados">
+            <thead>
+                <tr>
+                    <th>Iteración</th>
+                    <th>a</th>
+                    <th>b</th>
+                    <th>Punto medio (m)</th>
+                    <th>f(a)</th>
+                    <th>f(b)</th>
+                    <th>f(m)</th>
+                    <th>Error</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const lienzo = document.getElementById('lienzo');
+    const lienzoImportante = lienzo.getContext('2d');
+    const btnIteracion = document.getElementById('btnIteracion');
+    const btnRaiz = document.getElementById('btnRaiz');
+    const tbody = document.querySelector('#tablaResultados tbody');
+    const panelErrores = document.getElementById('panelErrores');
+    const zonaResultados = document.getElementById('zonaResultados');
+    const panelInfoIteracion = document.getElementById('panelInfoIteracion');
+
+    // Variables globales
+    let f_compiled;
+    let a, b, a_init, b_init, tol;
+    let iteracion = 0;
+    let xMin, xMax, yMin, yMax;
+    let raizEncontrada = false;
+
+    // Evaluar la función usando math.js
+    function evaluarFuncion(valorX, expr_compilada) {
+      let valorSustituido = expr_compilada.evaluate({x: valorX});
+      return valorSustituido;
+    }
+
+    // Calcular límites para que la gráfica se autoajuste
+    function calcularLimitesGrafica() {
+        let paddingX = Math.abs(b_init - a_init) * 0.4;
+        xMin = Math.min(a_init, b_init) - paddingX;
+        xMax = Math.max(a_init, b_init) + paddingX;
+        
+        let minY = Infinity, maxY = -Infinity;
+        for(let i = 0; i <= 100; i++) {
+            let x = xMin + (i / 100) * (xMax - xMin);
+            let y = evaluarFuncion(x, f_compiled);
+            if(y < minY) minY = y;
+            if(y > maxY) maxY = y;
+        }
+        
+        let paddingY = (maxY - minY) * 0.2;
+        if (paddingY === 0) paddingY = 1;
+        yMin = minY - paddingY;
+        yMax = maxY + paddingY;
+    }
+
+    // Funciones de mapeo de coordenadas
+    function mapearX(x) { return ((x - xMin) / (xMax - xMin)) * lienzo.width; }
+    function mapearY(y) { return lienzo.height - ((y - yMin) / (yMax - yMin)) * lienzo.height; }
+
+    // Dibujar gráfica
+    function actualizarGrafico() {
+        lienzoImportante.clearRect(0, 0, lienzo.width, lienzo.height);
+        
+        // Ejes
+        lienzoImportante.beginPath();
+        const yCero = mapearY(0);
+        if (yCero >= 0 && yCero <= lienzo.height) {
+            lienzoImportante.moveTo(0, yCero); lienzoImportante.lineTo(lienzo.width, yCero);
+        }
+        const xCero = mapearX(0);
+        if (xCero >= 0 && xCero <= lienzo.width) {
+            lienzoImportante.moveTo(xCero, 0); lienzoImportante.lineTo(xCero, lienzo.height);
+        }
+        lienzoImportante.strokeStyle = '#adb5bd';
+        lienzoImportante.lineWidth = 1.5;
+        lienzoImportante.stroke();
+
+        // Intervalo sombreado
+        lienzoImportante.fillStyle = 'rgba(25, 135, 84, 0.1)';
+        lienzoImportante.fillRect(mapearX(a), 0, mapearX(b) - mapearX(a), lienzo.height);
+
+        // Líneas a y b
+        lienzoImportante.beginPath();
+        lienzoImportante.moveTo(mapearX(a), 0); lienzoImportante.lineTo(mapearX(a), lienzo.height);
+        lienzoImportante.strokeStyle = '#f451a2'; lienzoImportante.setLineDash([5, 5]); lienzoImportante.stroke();
+        
+        lienzoImportante.beginPath();
+        lienzoImportante.moveTo(mapearX(b), 0); lienzoImportante.lineTo(mapearX(b), lienzo.height);
+        lienzoImportante.strokeStyle = '#f451a2'; lienzoImportante.stroke();
+        lienzoImportante.setLineDash([]);
+
+        // Función
+        lienzoImportante.beginPath();
+        for (let px = 0; px <= lienzo.width; px++) {
+            let x = xMin + (px / lienzo.width) * (xMax - xMin);
+            let py = mapearY(evaluarFuncion(x, f_compiled));
+            if (px === 0) lienzoImportante.moveTo(px, py);
+            else lienzoImportante.lineTo(px, py);
+        }
+        lienzoImportante.strokeStyle = '#0d6efd';
+        lienzoImportante.lineWidth = 2.5;
+        lienzoImportante.stroke();
+
+        // Puntos f(a) y f(b)
+        lienzoImportante.fillStyle = '#f451a2';
+        lienzoImportante.beginPath(); lienzoImportante.arc(mapearX(a), mapearY(evaluarFuncion(a, f_compiled)), 5, 0, Math.PI*2); lienzoImportante.fill();
+        lienzoImportante.beginPath(); lienzoImportante.arc(mapearX(b), mapearY(evaluarFuncion(b, f_compiled)), 5, 0, Math.PI*2); lienzoImportante.fill();
+    }
+
+    // Iniciar y validar
+    function iniciar() {
+        panelErrores.innerHTML = '';
+        tbody.innerHTML = '';
+        zonaResultados.style.display = 'none';
+
+        let funcStr = document.getElementById('funcion').value;
+        a_init = parseFloat(document.getElementById('a').value);
+        b_init = parseFloat(document.getElementById('b').value);
+        tol = parseFloat(document.getElementById('tolerancia').value);
+
+        if(a_init >= b_init) {
+            panelErrores.innerHTML = '<p class="error">El extremo inferior (a) debe ser menor que el extremo superior (b).</p>';
+            return;
+        }
+
+        try {
+            f_compiled = math.compile(funcStr);
+            evaluarFuncion(a_init, f_compiled); // Prueba de error
+        } catch (error) {
+            panelErrores.innerHTML = '<p class="error">Error en la sintaxis de la función. Revísala.</p>';
+            return;
+        }
+
+        let fa = evaluarFuncion(a_init, f_compiled);
+        let fb = evaluarFuncion(b_init, f_compiled);
+
+        if (fa * fb >= 0) {
+            panelErrores.innerHTML = `<p class="error">El intervalo no es válido por el Teorema de Bolzano, f(a) y f(b) deben tener signos opuestos.<br>f(${a_init}) = ${fa.toFixed(4)}, f(${b_init}) = ${fb.toFixed(4)}</p>`;
+            btnIteracion.disabled = true;
+            btnRaiz.disabled = true;
+            return;
+        }
+
+        // Configurar inicio
+        a = a_init;
+        b = b_init;
+        iteracion = 0;
+        raizEncontrada = false;
+        
+        btnIteracion.disabled = false;
+        btnRaiz.disabled = false;
+        zonaResultados.style.display = 'block';
+
+        calcularLimitesGrafica();
+        actualizarGrafico();
+        
+        panelInfoIteracion.innerHTML = `
+            <strong>Inicio:</strong> Intervalo inicial: <span class="math">[${a.toFixed(4)}, ${b.toFixed(4)}]</span><br>
+            f(a) = ${fa.toFixed(4)}, f(b) = ${fb.toFixed(4)}<br>
+            <hr>
+            <strong>Conclusión:</strong> f(a) y f(b) tienen distinto signo, luego existe raíz en este intervalo.<br>Pulsa <strong>Siguiente iteración</strong> para ver cómo se aplica el método de la bisección paso a paso, o pulsa <strong>Calcular raíz</strong> para verlo todo de una vez.`;
+    }
+
+    // Lógica de una iteracion
+    function siguienteIteracion() {
+        if (raizEncontrada) return;
+        
+        iteracion++;
+        let fa = evaluarFuncion(a, f_compiled);
+        let fb = evaluarFuncion(b, f_compiled);
+        let m = (a + b) / 2;
+        let fm = evaluarFuncion(m, f_compiled);
+        let error = Math.abs(b - a) / 2;
+
+        // Añadir a tabla
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${iteracion}</td>
+            <td>${a.toFixed(4)}</td>
+            <td>${b.toFixed(4)}</td>
+            <td><b>${m.toFixed(4)}</b></td>
+            <td>${fa.toFixed(4)}</td>
+            <td>${fb.toFixed(4)}</td>
+            <td>${fm.toFixed(4)}</td>
+            <td>${error.toFixed(4)}</td>
+        `;
+        tbody.appendChild(tr);
+
+        let mensajeIntervalo = `Intervalo de búsqueda: <span class="math">[${a.toFixed(4)}, ${b.toFixed(4)}]</span>`;
+        let mensaje = "";
+
+        // Validar fin
+        if (fm === 0 || error <= tol || iteracion >= 100) {
+            mensaje = `<span class="success">¡Proceso terminado! La raíz es m ≈ ${m.toFixed(4)} con un error de ${error.toFixed(4)}.</span>`;
+            btnIteracion.disabled = true;
+            btnRaiz.disabled = true;
+            raizEncontrada = true;
+        } else if (fa * fm > 0) {
+            mensaje = `f(m) tiene el mismo signo que f(a), luego sustituimos <b>a</b> por <b>m</b>.`;
+            a = m;
+        } else {
+            mensaje = `f(m) tiene el mismo signo que f(b), luego sustituimos <b>b</b> por <b>m</b>.`;
+            b = m;
+        }
+
+        actualizarGrafico();
+
+        panelInfoIteracion.innerHTML = `
+            <strong>Iteración ${iteracion}:</strong> ${mensajeIntervalo}<br>
+            Punto medio calculado: <span class="math">m = ${m.toFixed(4)}</span><br>
+            f(a) = ${fa.toFixed(4)}, f(b) = ${fb.toFixed(4)}, f(m) = ${fm.toFixed(4)}<br>
+            <hr>
+            <strong>Acción:</strong> ${mensaje}<br>
+            ${!raizEncontrada ? `Nuevo intervalo de búsqueda: <span class="math">[${a.toFixed(4)}, ${b.toFixed(4)}]</span>` : ''}`;
+    }
+
+    // Calcular todo de una vez
+    function calcularRaiz() {
+        while(!raizEncontrada && iteracion < 100) {
+            siguienteIteracion();
+        }
+    }
+  </script>
+
+</body>
+
+</html>

@@ -4,20 +4,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title> Página principal </title>
 
+<style>
+	h1 {
+    	background-color:cornflowerblue;
+    	color: White;
+    	text-align: center;
+    	padding: 10px;
+	}
+	
+	.menu-ejercicios {
+		display: flex;
+		align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .boton-ejercicio {
+        background-color: white;
+        color: cornflowerblue;
+        text-decoration: none;
+        padding: 15px 20px;
+        border: 2px solid cornflowerblue;
+        border-radius: 30px;
+        font-weight: bold;
+        font-size: 1.1em;
+        box-shadow: 3px 6px 6px rgba(100, 149, 237, 0.2);
+    }
+</style>
+
 <body>
 
-	<h1 style="background-color:rgb(187, 97, 157); color:White; text-align: center; padding:10px"> Matemáticas dinámicas (Parte II) </h1>
-	<h2 style="color:rgb(187, 97, 157); text-align: center; padding:8px; border:5px solid rgb(187, 97, 157)"> 	Marina Ortiz Montes </h2>
+	<h1> Matemáticas dinámicas (Parte II) </h1>
+	<h2 style="color:cornflowerblue; text-align: center; padding:8px; border:5px solid cornflowerblue; border-radius: 10px;"> 	Marina Ortiz Montes </h2>
 
 	<p> Esta es la página web de la segunda parte de la asignatura Matemáticas dinámicas del Máster en Matemáticas. En ella, recopilaré todos los ejercicios desarrollados a lo largo de este curso. </p>
 
-	<p> Esto es un enlace al <a href="./ejercicio2.html">Ejercicio 2</a>.</p>
-	
-	<p> Esto es un enlace al <a href="./ejercicio3.html">Ejercicio 3</a>.</p>
-
-	<p> Esto es un enlace al <a href="./ejercicio4.html">Ejercicio 4</a>.</p>
-
-	<p> Esto es un enlace al <a href="./ejercicio5.html">Ejercicio 5</a>.</p>
+    <div class="menu-ejercicios">
+        <a href="./ejercicio2.html" class="boton-ejercicio">Ejercicio 2</a>
+        <a href="./ejercicio3.html" class="boton-ejercicio">Ejercicio 3</a>
+        <a href="./ejercicio4.html" class="boton-ejercicio">Ejercicio 4</a>
+        <a href="./ejercicio5.html" class="boton-ejercicio">Ejercicio 5</a>
+		<a href="./ejercicio6parte1.html" class="boton-ejercicio">Ejercicio 6 (Parte 1)</a>
+		<a href="./ejercicio6parte2.html" class="boton-ejercicio">Ejercicio 6 (Parte 2)</a>
+		<a href="./ejercicio6parte3.html" class="boton-ejercicio">Ejercicio 6 (Parte 3)</a>
+    </div>
 
 </body>
 

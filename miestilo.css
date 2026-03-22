@@ -23,6 +23,25 @@ h3 {
     padding: 6px;
 }
 
+p {
+    text-align: justify;
+}
+
+canvas {
+    border: 1px solid black;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 0.9em;
+    font-weight: bold;
+    border-color:#a2a5b6;
+    border-radius: 8px;
+    flex: 1;
+}
+
+button:disabled { cursor: not-allowed }
+
 .bordeFino {
     border: 2px solid black;
     padding: 10px;
@@ -47,4 +66,12 @@ h3 {
     border: 2px dashed rgb(193, 132, 18);
     padding: 10px;
     margin: 10px;
+}
+
+.contenedor-centrado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }

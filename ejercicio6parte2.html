@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> Ejercicio 6 Parte 2 </title>
+<link rel="stylesheet" href="miestilo.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      R: "{\\mathbb R}",
+      N: "{\\mathbb N}",
+      Z: "{\\mathbb Z}",
+      bold: ["{\\bf #1}",1]
+    }
+  }
+});
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+TeX: {
+  extensions: ["AMSmath.js", "AMSsymbols.js", "color.js"]
+}
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML' async></script>
+<script src='https://algebra.js.org/javascripts/algebra-0.2.6.min.js' ></script> 
+
+<style>
+  
+  #formula-Sn { display: none; }
+
+  .botones {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .formula {
+    background-color: rgb(242, 123, 182);
+    color:white;
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    text-align: center;
+    align-items: center;
+    width: 80%;
+    box-sizing: border-box;
+  }
+  
+</style>
+
+<body>
+
+  <h1> Matemáticas dinámicas (Parte II) </h1>
+  <h1> Ejercicio 6 </h1>
+
+  <h3> Parte 2 </h3>
+
+  <div id="Ej6Parte2" class="bordeFino">
+    <h2 style="background-color:rgb(242, 123, 182); border-radius: 8px;"> Suma de la serie geométrica de razón $\mathbf{\frac{1}{4}}$ </h2>
+    
+    <p> Las progresiones geométricas de razón $r$ con $r < |1|$ son las únicas cuya suma converge. En una primera aproximación a las progresiones y sus sumas, llama la atención que la suma de una cantidad infinita de sumandos sea finita y cuesta ver por qué. </p>
+    <p> Consideremos la suma de $n$ términos de la progresión geométrica de razón $\frac{1}{4}$: </p>
+    <p style="color:rgb(242, 123, 182)"> $$ \mathbf{S_{n}=\sum_{k=1}^{n}\left(\frac{1}{4}\right)^k = \frac{1}{4}+\frac{1}{4^2}+\cdots+\frac{1}{4^n}} $$ </p>
+    <p> A continuación, demostramos de forma iterativa que la suma infinita de la progresión anterior es $\frac{1}{3}$, es decir: </p>
+    <p style="color:rgb(242, 123, 182)"> $$ \mathbf{S_{\infty}=\sum_{k=1}^{\infty}\left(\frac{1}{4}\right)^k = \frac{1}{3} \approx 0.333333} $$ </p>
+    <p> Pulsa el botón <strong>Añadir término</strong> para dibujar un triángulo invertido en el centro de la parte superior restante. Cada nuevo triángulo rosa representa $\frac{1}{4}$ del área del triángulo anterior, esto es, cada término de la sucesión. Al cabo de varias iteraciones se puede observar que la suma de estas fracciones equivale a $\frac{1}{3}$ del área total. Pulsa el botón <strong>Reiniciar</strong> para comenzar de nuevo. </p>
+    
+    <div class="contenedor-centrado">
+      <div class="botones">
+        <button id=btn-añadir onclick="añadirTermino()"> Añadir término </button>
+        <button onclick="reiniciar()"> Reiniciar </button>
+      </div>
+      <canvas id="lienzo" width="500" height="450" style="background-color: antiquewhite; margin-bottom: 20px;"></canvas>
+      <div class="formula" id="formula-Sn">
+        
+      </div>
+    </div>
+  </div>
+
+</body>
+
+
+<script>
+
+  let Fraction = algebra.Fraction;
+  let lienzo = document.getElementById("lienzo");
+  let lienzoImportante = lienzo.getContext("2d");
+  const btnAñadir = document.getElementById('btn-añadir');
+  const formulaSn = document.getElementById('formula-Sn');
+
+  let n = 0;
+  const maxN = 10; // Número máximo de iteraciones
+
+  // Vértices del triángulo principal
+  const topVertex = { x: 250, y: 20 };
+  const blVertex = { x: 20, y: 420 };
+  const brVertex = { x: 480, y: 420 };
+
+  // Función para calcular el punto medio entre dos vértices
+  function calcularPuntoMedio(p1, p2) {
+    return {
+      x: (p1.x + p2.x) / 2,
+      y: (p1.y + p2.y) / 2
+    };
+  }
+
+  // Función para dibujar un triángulo
+  function dibujarTriangulo(p1, p2, p3, color) {
+    lienzoImportante.fillStyle = color;
+    lienzoImportante.beginPath();
+    lienzoImportante.moveTo(p1.x, p1.y);
+    lienzoImportante.lineTo(p2.x, p2.y);
+    lienzoImportante.lineTo(p3.x, p3.y);
+    lienzoImportante.fill();
+  }
+
+  function actualizarFormula() {
+      if (n === 0) {
+        formulaSn.innerText = "";
+        return;
+      }
+      
+      let sumaTerms = "";
+      let sumaValue = 0;
+
+      for (let i = 1; i <= n; i++) {
+        let divisor = Math.pow(4, i);
+        sumaValue = sumaValue + 1 / divisor;
+        let fraccion = new Fraction(1, divisor);
+        sumaTerms = sumaTerms + fraccion.toString() + " + ";
+      }
+      sumaTerms = sumaTerms.slice(0, -3) + " = "; // Eliminar el último "+"
+      formulaSn.innerText = "$S_{"+n+"} = $" + sumaTerms + sumaValue.toFixed(6);
+
+      // Desactivar el botón al llegar al número máximo de iteraciones
+      btnAñadir.disabled = (n >= maxN);
+
+      MathJax.Hub.Queue(["Typeset",MathJax.Hub,"MathOutput"]);
+  }
+
+  function dibujar() {
+    // Limpiar el lienzo
+    lienzoImportante.clearRect(0, 0, lienzo.width, lienzo.height);
+
+    // Dibujar el triángulo base completo
+    dibujarTriangulo(topVertex, blVertex, brVertex, "#474644");
+
+    // Variables para rastrear el triángulo objetivo de la iteración actual
+    let currentTop = topVertex;
+    let currentBL = blVertex;
+    let currentBR = brVertex;
+
+    // Dibujar iterativamente los triángulos claros
+    for (let i = 0; i < n; i++) {
+      // Calcular los puntos medios del triángulo actual
+      let midLeft = calcularPuntoMedio(currentTop, currentBL);
+      let midRight = calcularPuntoMedio(currentTop, currentBR);
+      let midBottom = calcularPuntoMedio(currentBL, currentBR);
+
+      // Dibujar el triángulo claro invertido en el centro
+      dibujarTriangulo(midLeft, midRight, midBottom, "rgb(242, 123, 182)");
+
+      // El nuevo triángulo objetivo para la siguiente iteración es el superior
+      currentBL = midLeft;
+      currentBR = midRight;
+      // currentTop se mantiene igual
+    }
+
+    // Actualizar la fórmula
+    actualizarFormula();
+  }
+
+  // Llamada inicial para dibujar el estado base
+  dibujar();
+
+  function añadirTermino() {
+    if (n < maxN) {
+      n++;
+      dibujar();
+      formulaSn.style.display = 'block';
+    }
+  }
+
+  function reiniciar() {
+    n = 0;
+    dibujar();
+    formulaSn.style.display = 'none';
+    // Reactivar el botón
+    btnAñadir.disabled = false;
+  }
+  
+</script>
+
+</html>

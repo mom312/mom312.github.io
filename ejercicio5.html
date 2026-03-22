@@ -33,25 +33,30 @@ TeX: {
 
 <body>
 
+  <h1> Matemáticas dinámicas (Parte II) </h1>
   <h1> Ejercicio 5 </h1>
 
 
   <h3> Parte 1 </h3>
 
   <div id="Parte1" class="bordeFino">
-    <p> Realiza sucesivos clics en el lienzo inferior para dibujar una línea poligonal. </p>
-    <canvas id="lienzo" width="500" height="500" style="margin-bottom:10px; background-color: antiquewhite" onclick="cogerClicks(event)"></canvas>
+    <div class="contenedor-centrado">
+      <p> Realiza sucesivos clics en el lienzo inferior para dibujar una línea poligonal. </p>
+      <canvas id="lienzo" width="500" height="500" style="margin-bottom:10px; background-color: antiquewhite" onclick="cogerClicks(event)"></canvas>
+    </div>
   </div>
 
 
   <h3> Parte 2 </h3>
 
   <div id="Parte2" class="bordeFino">
-    <div id="TextoParaModificar">
-      <p> Escribe abajo un texto. Puede contener fórmulas en código LateX (entre dólares). Al pulsar el botón, este texto cambiará al que has introducido. </p>
-    </div>
-    <input type="text" id="entradaTexto" style="margin-bottom:10px">
-    <button onclick="modificarTextoYpasarLatex()"> Púlsame para modificar el texto de arriba por el introducido. </button>
+    <p>
+      <div id="TextoParaModificar">
+        Escribe abajo un texto. Puede contener fórmulas en código LateX (entre dólares). Al pulsar el botón, este texto cambiará al que has introducido.
+      </div>
+    </p>
+    <input type="text" id="entradaTexto" style="margin-bottom:10px; padding: 10px 15px;">
+    <button onclick="modificarTextoYpasarLatex()"> Púlsame para modificar el texto de arriba por el introducido </button>
   </div>
 
 </body>
@@ -67,7 +72,6 @@ TeX: {
 
   function dibujarLinea(puntos) {
     if (puntos.length > 1) {
-      let i;
       let puntoInicial = puntos[puntos.length-2];
       let puntoFinal = puntos[puntos.length-1];
       lienzoImportante.moveTo(puntoInicial.coordX, puntoInicial.coordY);

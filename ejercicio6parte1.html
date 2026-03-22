@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title> Ejercicio 6 Parte 1 </title>
+<link rel="stylesheet" href="miestilo.css">
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    processEscapes: true
+  }
+});
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      R: "{\\mathbb R}",
+      N: "{\\mathbb N}",
+      Z: "{\\mathbb Z}",
+      bold: ["{\\bf #1}",1]
+    }
+  }
+});
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+TeX: {
+  extensions: ["AMSmath.js", "AMSsymbols.js", "color.js"]
+}
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML' async></script>
+<script src='https://algebra.js.org/javascripts/algebra-0.2.6.min.js' ></script> 
+<style>
+  .botones {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+  }
+</style>
+
+
+<body>
+
+  <h1> Matemáticas dinámicas (Parte II) </h1>
+  <h1> Ejercicio 6 </h1>
+
+  <h3> Parte 1 </h3>
+
+  <div id="Ej6Parte1" class="bordeFino">
+    
+    <div class="contenedor-centrado">
+      <p> Realiza 4 clics en el lienzo inferior para dibujar dos rectas. Luego, pulsa el botón <strong>Calcular intersección</strong> para para calcular y dibujar su punto de intersección. Pulsa el botón <strong>Reiniciar lienzo</strong> para comenzar de nuevo.  </p>
+      <canvas id="lienzo" width="500" height="500" style="margin-bottom:10px; background-color: antiquewhite" onclick="cogerClicks(event)"></canvas>
+      <div class="botones">
+        <button onclick="dibujarInterseccion()"> Calcular intersección </button>
+        <button onclick="reiniciar()"> Reiniciar lienzo </button>
+      </div>
+      <p>
+        <div id="interseccion">
+          
+        </div>
+      </p>
+    </div>
+    
+  </div>
+
+</body>
+
+
+<script>
+
+  let Equation = algebra.Equation;
+  let lienzo = document.getElementById("lienzo");
+  let lienzoImportante = lienzo.getContext("2d");
+  let coordenadasLienzo = lienzo.getBoundingClientRect();
+  let listaPuntos=[];
+  let listaEcuaciones=[];
+  let divInterseccion = document.getElementById("interseccion");
+
+  function evaluarExpresion(valorX, expr) {
+    let valorSustituido = expr.eval({x:valorX});
+    let valorDefinitivo = valorSustituido.constants[0].valueOf();
+    return valorDefinitivo;
+  }
+
+  function dibujarRecta() {
+    if(listaPuntos.length == 2 || listaPuntos.length == 4) {
+      // Calculamos la ecuación de la recta a partir de los 2 puntos seleccionados:
+      let puntoInicial = listaPuntos[listaPuntos.length-2];
+      let puntoFinal = listaPuntos[listaPuntos.length-1];
+      let x1 = puntoInicial.coordX;
+      let y1 = puntoInicial.coordY;
+      let x2 = puntoFinal.coordX;
+      let y2 = puntoFinal.coordY;
+      let expresion = "("+y2+"-"+y1+")/("+x2+"-"+x1+")*x+"+y1+"-"+"("+y2+"-"+y1+")/("+x2+"-"+x1+")*"+x1;
+      let ecRecta = algebra.parse(expresion);
+      listaEcuaciones.push(ecRecta);
+
+      // Dibujamos la recta uniendo el punto (0,y0) con el punto (500,y500):
+      let y0 = evaluarExpresion(0, ecRecta);
+      let y500 = evaluarExpresion(500, ecRecta);
+      lienzoImportante.beginPath();
+      lienzoImportante.moveTo(0, y0);
+      lienzoImportante.lineTo(500, y500);
+      lienzoImportante.stroke();
+    }
+  }
+
+  function cogerClicks(event) {
+    let x = event.clientX - coordenadasLienzo.x;
+    let y = event.clientY - coordenadasLienzo.y;
+    listaPuntos.push({coordX:x,coordY:y});
+    dibujarRecta();
+  }
+
+  function dibujarInterseccion() {
+    // Resolvemos la ecuación resultante de igualar ambas ecuaciones de la recta para hallar su punto de intersección:
+    let expresionRecta1 = listaEcuaciones[0];
+    let expresionRecta2 = listaEcuaciones[1];
+    let ecuacion = new Equation(expresionRecta1,expresionRecta2);
+    let xi = ecuacion.solveFor("x");
+    let yi = evaluarExpresion(xi, expresionRecta1);
+    let puntoi = "(" + Math.round(xi*100)/100 + ", " + Math.round(yi*100)/100 + ")";
+
+    if(0<=xi && xi<=500 && 0<=yi && yi<=500) {
+      // Dibujamos dicho punto de intersección y mostramos sus coordenadas por pantalla:
+      lienzoImportante.beginPath();
+      lienzoImportante.arc(xi, yi, 4, 0, 2 * Math.PI);
+      lienzoImportante.fillStyle = "cornflowerblue";
+      lienzoImportante.fill();
+      lienzoImportante.stroke();
+      divInterseccion.innerText = "El punto de intersección de ambas rectas es " + puntoi.toString() + ".";
+    } else {
+      divInterseccion.innerText = "El punto de intersección de ambas rectas se sale del lienzo.";
+    }
+  }
+
+  function reiniciar() {
+    listaPuntos=[];
+    listaEcuaciones=[];
+    let l = document.getElementById("lienzo");
+    let contexto = l.getContext("2d");
+    contexto.clearRect(0, 0, l.width, l.height);
+    divInterseccion.innerText="";
+  }
+  
+</script>
+
+</html>
